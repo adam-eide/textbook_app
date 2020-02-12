@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "174978286870",
+    "firebase_url": "https://textbook-db-25384.firebaseio.com",
+    "project_id": "textbook-db-25384",
+    "storage_bucket": "textbook-db-25384.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:174978286870:android:b4cc0c91547d49279d7c37",
+        "android_client_info": {
+          "package_name": "com.team8.textbook_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "174978286870-iq0kt79u2b5uakgiknb064k8bfi4bh5i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.team8.textbook_app",
+            "certificate_hash": "f01a4d2996368271f57e5025ec5c8c29c48cc89c"
+          }
+        },
+        {
+          "client_id": "174978286870-bhqlcqv4gunlvs4savvehcu3frop0kk9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALsBb3oTqV6l9DgC2BJbxiGP4OVDgpJlA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "174978286870-bhqlcqv4gunlvs4savvehcu3frop0kk9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
