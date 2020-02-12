@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\u2iso\\Documents\\GitHub\\textbook_db\\textbook_app\\build\\app\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-in\\values-in.xml",
+            "outputFile": "C:\\Users\\u2iso\\Documents\\GitHub\\textbook_app\\build\\app\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-in\\values-in.xml",
             "map": [
                 {
                     "source": "C:\\Users\\u2iso\\.gradle\\caches\\transforms-2\\files-2.1\\27a51f2d6fb4c91d7925584bc266b0ae\\play-services-base-17.0.0\\res\\values-in\\values.xml",

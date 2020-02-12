@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -77,11 +76,9 @@ class _MyHomePageState extends State<MyHomePage> {
   List<BookCover> books;
 
 
-
   void initState() {
     super.initState();
     books = new List<BookCover>();
-    books.add(new BookCover("a", "a", "a"));
     _controller = TextEditingController();
   }
 
@@ -92,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
           title: Text(widget.title),
         ),
         body: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
                 Container(
                   width: MediaQuery.of(context).size.width,
@@ -159,7 +156,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
           child: ListTile(
             title: books[index]._widget(),
-            onTap: () {
+            onTap: () async{
+              //print(await FlutterBarcodeScanner.scanBarcode('#FFFF0F', "done", false, ScanMode.BARCODE));
               print(books[index].title);
             //Navigator.of(context).pop();
           },

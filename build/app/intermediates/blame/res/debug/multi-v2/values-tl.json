@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\u2iso\\Documents\\GitHub\\textbook_db\\textbook_app\\build\\app\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-tl\\values-tl.xml",
+            "outputFile": "C:\\Users\\u2iso\\Documents\\GitHub\\textbook_app\\build\\app\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-tl\\values-tl.xml",
             "map": [
                 {
                     "source": "C:\\Users\\u2iso\\.gradle\\caches\\transforms-2\\files-2.1\\3777282c44389acb0feb039c3ca93e52\\jetified-play-services-basement-17.0.0\\res\\values-tl\\values.xml",
