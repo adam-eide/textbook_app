@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:textbook_app/AddBookForm.dart';
 import 'package:url_launcher/url_launcher.dart';
 void main() => runApp(MyApp());
 
@@ -175,6 +176,12 @@ class _MyHomePageState extends State<MyHomePage> {
     Firestore.instance.collection('books')
         .where('ISBN', arrayContainsAny: [input, input.replaceAll('-', '')]).getDocuments().then(
             (snap){
+              if (snap.documents.isEmpty){
+                Navigator.push(context, MaterialPageRoute(builder: (context)
+                {
+                  return AddBook(input.replaceAll('-', ''));
+                }));
+              }
               Map<String, dynamic> map = snap.documents.elementAt(0).data;
               print(map.toString());
             if (snap.documents.length > 1)
@@ -192,7 +199,8 @@ class _MyHomePageState extends State<MyHomePage> {
           setState((){});
           print("dont w slow part");
           print(books[0].title + books[0].isbn);
-  } );
+  }
+  );
     /*Firestore.instance.collection('books').where('ISBN', arrayContainsAny: [input, input.replaceAll('-', '')]).snapshots()
         .listen((data) =>
         data.documents.forEach((doc) => books.add(new BookCover(doc['Title'], formatISBNs(doc['ISBN']), ""))));*/
