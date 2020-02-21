@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:textbook_app/AddBookForm.dart';
+import 'package:barcode_scan/barcode_scan.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 void main() => runApp(MyApp());
 
@@ -121,6 +123,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         onSubmitted: (String value)  {
                           books.clear();
                            getBooks(value);
+                          //BarcodeScanner.scan().then((value){
+                            //print("BARCODE");
+                            //print(value);
+                          //});
                         },
                       ),
                     ),
@@ -159,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
             title: books[index]._widget(),
             onTap: () async{
               //print(await FlutterBarcodeScanner.scanBarcode('#FFFF0F', "done", false, ScanMode.BARCODE));
-              print(books[index].title);
+              print(books[index].title); // this is for debug
             //Navigator.of(context).pop();
           },
           ),
@@ -173,6 +179,7 @@ class _MyHomePageState extends State<MyHomePage> {
     String title;
     List<String> isbns;
     print("STARTING");
+
     Firestore.instance.collection('books')
         .where('ISBN', arrayContainsAny: [input, input.replaceAll('-', '')]).getDocuments().then(
             (snap){

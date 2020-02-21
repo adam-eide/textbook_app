@@ -56,19 +56,20 @@ class AddBookForm extends State {
                 },
               ),
               RaisedButton(
-          onPressed: () {
-          // Validate returns true if the form is valid, otherwise false.
-              if (_formKey.currentState.validate()) {
-                  Firestore.instance.collection("books")
-                      .document().setData({'ISBN':isbn, 'Name': map['Name'], "Edition":map['Edition'] });
+                onPressed: () {
+                // Validate returns true if the form is valid, otherwise false.
+                    if (_formKey.currentState.validate()) {
 
-                Scaffold
-                    .of(context)
-                    .showSnackBar(SnackBar(content: Text('Processing Data')));
-              }
-           },
-          child: Text('Submit'),
-          )
+                        Firestore.instance.collection("books")
+                            .document().setData({'ISBN':isbn, 'Name': map['Name'], "Edition":map['Edition'] });
+
+                      Scaffold
+                          .of(context)
+                          .showSnackBar(SnackBar(content: Text('Processing Data')));
+                    }
+                 },
+                child: Text('Submit'),
+                )
 
             ]
         )

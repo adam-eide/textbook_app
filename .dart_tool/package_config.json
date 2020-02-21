@@ -20,6 +20,12 @@
       "languageVersion": "2.0"
     },
     {
+      "name": "barcode_scan",
+      "rootUri": "file:///C:/flutter/flutter_windows_v1.9.1+hotfix.2-stable/flutter/.pub-cache/hosted/pub.dartlang.org/barcode_scan-2.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
+    },
+    {
       "name": "boolean_selector",
       "rootUri": "file:///C:/flutter/flutter_windows_v1.9.1+hotfix.2-stable/flutter/.pub-cache/hosted/pub.dartlang.org/boolean_selector-1.0.5",
       "packageUri": "lib/",
@@ -272,7 +278,7 @@
       "languageVersion": "2.1"
     }
   ],
-  "generated": "2020-02-12T21:43:04.098177Z",
+  "generated": "2020-02-21T17:27:09.785291Z",
   "generator": "pub",
   "generatorVersion": "2.7.0"
 }
