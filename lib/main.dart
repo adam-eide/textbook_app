@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:textbook_app/AddBookForm.dart';
 import 'package:barcode_scan/barcode_scan.dart';
+import 'package:textbook_app/BookInfoWindow.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 void main() => runApp(MyApp());
@@ -36,7 +37,19 @@ class BookCover{
     // INFO is there in case we need it later for image or edition or class
   }
 
+  String formatISBNs(String s){
+    String out = "";
+    if(s.length.toInt() == 13){
+      for (int i = 0; i < 13; i++) {
+        out += s[i];
+        if (i == 2 || i == 3 || i == 5 || i == 11)
+          out += "-";
+      }
+    }
 
+    print(out);
+    return out;
+  }
   Widget _widget(){
     return Container(
       width: double.infinity,
@@ -61,7 +74,7 @@ class BookCover{
             height: 3,
           ),
           Text(
-            isbn,
+              ((isbn.length == 0)?("does not exist yet\nclick here to add book"):(formatISBNs(isbn))),
             textAlign: TextAlign.left
           ),
           Container(
@@ -73,14 +86,23 @@ class BookCover{
   }
 }
 
+enum SearchBy{
+  isbn, name
+}
+
 class _MyHomePageState extends State<MyHomePage> {
 
   TextEditingController _controller;
   List<BookCover> books;
-
+  SearchBy searchBy;
+  List<String> searchForLabel;
 
   void initState() {
     super.initState();
+    searchForLabel = new List<String>();
+    searchForLabel.add("ISBN");
+    searchForLabel.add("Name");
+    searchBy = SearchBy.isbn;
     books = new List<BookCover>();
     _controller = TextEditingController();
   }
@@ -96,55 +118,154 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
                 Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height / 38,
-                  color: Colors.grey,
+                  height: 18,
+                  color: Colors.white,
                 ),
-
+              /*Container(
+                width: MediaQuery.of(context).size.width,
+                margin: EdgeInsets.only(left: 8, right: 8),
+                height: 2,
+                color: Colors.black,
+              ),*/
               Container(
+                height: 60,//MediaQuery.of(context).size.height / 15,
+                margin: EdgeInsets.only(left: 8, right: 8),
+                color: Color.fromRGBO(220, 220, 220, 1),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     Expanded(
-                      flex: 1,
+                      flex: 9,
                       child: Container(
+                        //color: Colors.white,
+                        padding: EdgeInsets.all(6),
+                        child: Container(
+                          //color: Colors.black12,
+                          /*decoration: BoxDecoration(
+                            //borderRadius: BorderRadius.circular(15.0),
+                            //color: Colors.white70,
+                            border: Border.all(
+                                color: Colors.black26, style: BorderStyle.solid, width: 1),
+                          ),*/
+                          padding: EdgeInsets.only(left: 6),
+                          child: DropdownButton<SearchBy>(
 
-                        color: Colors.grey,
+                            value: searchBy,
+                            icon: Icon(Icons.arrow_drop_down),
+                            iconSize: 16,
+                            style: TextStyle(
+                                color: Colors.black,
+                              fontSize:16,
+                            ),
+                            underline: Container(
+                              height: 2,
+                              color: Colors.black12,
+                            ),
+
+                            onChanged: (SearchBy newValue) {
+                              setState(() {
+                                searchBy = newValue;
+                              });
+                            },
+                            items: <SearchBy>[SearchBy.isbn, SearchBy.name]
+                                .map<DropdownMenuItem<SearchBy>>((SearchBy value) {
+                              return DropdownMenuItem<SearchBy>(
+                                value: value,
+                                child: Text(((value == SearchBy.isbn)?("ISBN"):("Title"))),
+                              );
+                            }).toList(),
+                          ),
+
+
+                        ),
                       ),
                     ),
                     Expanded(
-                      flex: 4,
-                      child: TextField(
-                        autofocus: true,
-                        minLines: 1,
-                        maxLines: 1,
-                        controller: _controller,
-                        onSubmitted: (String value)  {
-                          books.clear();
-                           getBooks(value);
-                          //BarcodeScanner.scan().then((value){
-                            //print("BARCODE");
-                            //print(value);
-                          //});
-                        },
-                      ),
+                      flex: 24,
+                      
+                        child: TextField(
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.only(left: 6),
+                              isDense: false,
+                              filled: false,
+
+                              fillColor: Colors.black12,
+                              hintText: ((searchBy == SearchBy.isbn)?("Enter the ISBN 13"):("Enter the title")),
+                              //contentPadding: const EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                              //focusedBorder: OutlineInputBorder(
+                              //  borderSide: BorderSide(color: Colors.white),
+                              //  borderRadius: BorderRadius.circular(25.7),
+                              //),
+                              border: InputBorder.none,
+                              //contentPadding: EdgeInsets.zero
+                            ),
+                          autofocus: false,
+                          minLines: 1,
+                          maxLines: 1,
+                          controller: _controller,
+                          onSubmitted: (String value)  {
+                            books.clear();
+                             getBooks(value);
+                            //BarcodeScanner.scan().then((value){
+                              //print("BARCODE");
+                              //print(value);
+                            //});
+                          },
+                        ),
+
                     ),
                     Expanded(
                       flex: 1,
                       child: Container(
-
-                        color: Colors.grey,
+                        color: Colors.white,
                       ),
+                    ),
+                    Expanded(
+                      flex: 6,
+                          child: Container(
+
+                            //color: Colors.black12,
+                            padding: EdgeInsets.all(4),
+
+                            child: ConstrainedBox(
+                            constraints: BoxConstraints.expand(),
+                            child: FlatButton(
+
+                                onPressed:  () {
+
+                                  BarcodeScanner.scan().then((value){
+                                    setState(() {
+                                      searchBy = SearchBy.isbn;
+                                    });
+                                    _controller.text = value;
+                                    books.clear();
+                                    getBooks(value);
+                                  });
+
+                                },
+                                padding: EdgeInsets.all(0.0),
+                                child: Image(image: AssetImage('assets/scan.png'))
+                            )
+                            ),
+                          )
                    ),
                   ],
                 ),
               ),
+              /*Container(
+                width: MediaQuery.of(context).size.width,
+                height: 2,
+                margin: EdgeInsets.only(left: 8, right: 8),
+                color: Colors.black,
+              ),*/
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height / 38,
-                color: Colors.grey,
+                color: Colors.white,
               ),
+
               bookList(),
             ],
           ),
@@ -164,9 +285,18 @@ class _MyHomePageState extends State<MyHomePage> {
           child: ListTile(
             title: books[index]._widget(),
             onTap: () async{
-              //print(await FlutterBarcodeScanner.scanBarcode('#FFFF0F', "done", false, ScanMode.BARCODE));
-              print(books[index].title); // this is for debug
-            //Navigator.of(context).pop();
+              if (books[index].isbn.length == 0){
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return AddBook("", books[index].title);
+                }));
+              }
+              else{
+                print("MAP.isbn");
+                print(books[index].isbn);
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return BookInfo(books[index].isbn, books[index].title);
+                }));
+              }
           },
           ),
         );
@@ -177,35 +307,40 @@ class _MyHomePageState extends State<MyHomePage> {
   void getBooks(String input){
 
     String title;
-    List<String> isbns;
     print("STARTING");
 
+    print(searchForLabel[searchBy.index]);
+    if (searchBy == SearchBy.isbn) input = input.replaceAll('-', '');
     Firestore.instance.collection('books')
-        .where('ISBN', arrayContainsAny: [input, input.replaceAll('-', '')]).getDocuments().then(
+    // this searches for name if searchBy=name and isbn if it = isbn
+        .where(searchForLabel[searchBy.index], isEqualTo: input.toUpperCase()).getDocuments().then(
             (snap){
-              if (snap.documents.isEmpty){
-                Navigator.push(context, MaterialPageRoute(builder: (context)
-                {
-                  return AddBook(input.replaceAll('-', ''));
-                }));
+              Map<String, dynamic> map;
+              if (snap.documents.isEmpty ){
+                print("documents = empty");
+                if (searchBy == SearchBy.isbn) {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return AddBook(input, "");
+                  }));
+                }
+                if (searchBy == SearchBy.name) {
+                  books.add(new BookCover(input, "", ""));
+                }
               }
-              Map<String, dynamic> map = snap.documents.elementAt(0).data;
-              print(map.toString());
-            if (snap.documents.length > 1)
-              print("MULTIPLE BOOKS WERE FOUND, RESULTS ARE NOT BEING DISPLAYED");
-            if (map.containsKey("Name")){
-              title = map['Name'];
-            }
-            if (map.containsKey("ISBN")){
-                String s = map['ISBN'].toString();
-                s = s.substring(1, s.length-1);
-                isbns = s.split(", ");
-            }
+              else {
+                print("documents != empty");
+                snap.documents.forEach((d){
+                  map = d.data;
+                  books.add(new BookCover(map['Name'], map['ISBN'], ""));
+                });
+              }
 
-          books.add(new BookCover(title, formatISBNs(isbns), ""));
-          setState((){});
-          print("dont w slow part");
-          print(books[0].title + books[0].isbn);
+
+
+          setState((){
+
+
+          });
   }
   );
     /*Firestore.instance.collection('books').where('ISBN', arrayContainsAny: [input, input.replaceAll('-', '')]).snapshots()
@@ -215,36 +350,7 @@ class _MyHomePageState extends State<MyHomePage> {
 print("LEAVING");
   }
 
-  String formatISBNs(List<String> list){
-    if (list == null) return "";
-    String out = "";
-    list = list.toSet().toList();
-    list.sort((a,b){return (a.length - b.length);});
-    //list.forEach((l){out += l; out += "\n";});
-    
-    list.forEach((l){
-      print(l.length);print( "         length");
-      if(l.length.toInt() == 10){
-      for (int i = 0; i < 10; i++) {
-        out += l[i];
-        if (i == 0 || i == 3 || i == 8)
-          out += "-";
-      }
-      out += "\n";
-    }
-      else if(l.length.toInt() == 13){
-        for (int i = 0; i < 13; i++) {
-          out += l[i];
-          if (i == 2 || i == 3 || i == 5 || i == 11)
-            out += "-";
-        }
-      }
 
-    }
-    );
-    print(out);
-    return out;
-  }
 
 
 }
