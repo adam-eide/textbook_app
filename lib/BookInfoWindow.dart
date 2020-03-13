@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:textbook_app/AddBookLink.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class Resource{
+class Resource {
   String description;
   String link;
   int reports;
@@ -12,41 +12,6 @@ class Resource{
 
   Resource(this.description, this.link, this.reports, this.votes);
 
-
-  Widget _widget(){
-    return Container(
-      width: double.infinity,
-
-      decoration: BoxDecoration(
-        //color: Colors.grey,
-          border: Border(
-              bottom: BorderSide(
-                  color: Colors.black,
-                  width: 1)
-          )
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(description,
-            textAlign: TextAlign.left,
-            style: TextStyle(fontWeight: FontWeight.bold),
-            textScaleFactor: 1.1,),
-          Container(
-            height: 3,
-          ),
-          Text(
-              link,
-              textAlign: TextAlign.left
-          ),
-          Container(
-            height: 2,
-          ),
-        ],
-      ),
-    );
-  }
 
 }
 
@@ -66,7 +31,6 @@ class BookInfoWindow extends State {
     getLinks();
   }
 
-  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -173,32 +137,11 @@ class BookInfoWindow extends State {
         shrinkWrap: true,
 
         itemBuilder: (context, index) {
+
           return Container(
             child: ListTile(
-              title: resources[index]._widget(),
-              trailing: IconButton(
-                icon: Icon(Icons.thumb_up),
-                onPressed: (){
-                  Firestore.instance.collection("books").where("ISBN", isEqualTo: isbn).getDocuments().then((doc){
-                    if (doc.documents.isNotEmpty)
-                      doc.documents.elementAt(0).reference.collection("Resources")
-                          .where("Description", isEqualTo: resources[index].description)
-                          .where("Link", isEqualTo: resources[index].link).getDocuments().then((d){
-                            d.documents.forEach((v){
-                              v.reference.setData({
-                                "Votes":v.data['Votes']+1,
-                              "Description":v.data['Description'],
-                                "Reports":v.data['Reports'],
-                                "Link":v.data['Link']});
-                            });
-                      });
-                  });
+              title: buildWidget(index),
 
-                },
-              ),
-              onTap: () async {
-                await launch(resources[index].link);
-              },
             ),
           );
         },
@@ -210,18 +153,152 @@ class BookInfoWindow extends State {
     print("GET LINKS");
     resources.clear();
     Firestore.instance.collection("books").where("ISBN", isEqualTo: isbn).getDocuments().then((doc){
-      doc.documents.elementAt(0).reference.collection("Resources").getDocuments().then((res){
-        print("!!!!!!!!!!!!!!!!!!!!!!!!");
+      CollectionReference collectionReference = doc.documents.elementAt(0).reference.collection("Resources");
+      collectionReference.getDocuments().then((res){
         res.documents.forEach((d){
-          print(d.data.toString());
           resources.add(new Resource(d.data["Description"], d.data["Link"], d.data["Reports"], d.data["Votes"]));
+
+
         }
         );
-        setState((){
 
-        });
       });
     });
+  }
+
+  Widget buildWidget(int i){
+    int index = i;
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        //color: Colors.grey,
+          border: Border(
+              bottom: BorderSide(
+                  color: Colors.black,
+                  width: 1)
+          )
+      ),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            flex: 26,
+            child: Container(
+              height: 60,
+              child: ConstrainedBox(
+                constraints: BoxConstraints.expand(),
+                child: FlatButton(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(resources[index].description,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+                        textScaleFactor: 1.3,),
+                      Container(
+                        height: 3,
+                      ),
+                      Text(
+                        ((resources[index].link.length > 45)?(resources[index].link.substring(0, 40)+"..."):(resources[index].link)),
+                        textAlign: TextAlign.left,
+                        textScaleFactor: 0.9,
+                      ),
+                      Container(
+                        height: 2,
+                      ),
+                    ],
+                  ),
+                  onPressed: (){
+
+                  },
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 5,
+            child: Container(
+              //color: Colors.black12,
+                decoration: BoxDecoration(border: Border.all(width: 1, color: Colors.black26)),
+                //padding: EdgeInsets.all(4),
+                height: 40,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints.expand(),
+                  child: FlatButton(
+
+                      onPressed:  () {
+                        Firestore.instance.collection("books").where("ISBN", isEqualTo: isbn).getDocuments().then((doc){
+                          if (doc.documents.isNotEmpty)
+                            doc.documents.elementAt(0).reference.collection("Resources")
+                                .where("Description", isEqualTo: resources[index].description)
+                                .where("Link", isEqualTo: resources[index].link).getDocuments().then((d){
+                              d.documents.forEach((v){
+                                v.reference.setData({
+                                  "Votes":v.data['Votes']+1,
+                                  "Description":v.data['Description'],
+                                  "Reports":v.data['Reports'],
+                                  "Link":v.data['Link']});
+                              });
+                            });
+                        }
+                        );
+
+                        setState(() {
+                          resources[index].votes++;
+                        });
+                      },
+                      padding: EdgeInsets.all(0.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Icon(Icons.thumb_up),
+                          Text(resources[index].votes.toString()),
+                        ],
+                      )
+                  ),
+                )
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Container(),
+          ),
+          Expanded(
+            flex: 5,
+            child: Container(
+              //color: Colors.black12,
+                decoration: BoxDecoration(border: Border.all(width: 1, color: Colors.black26)),
+                //padding: EdgeInsets.all(4),
+                height: 40,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints.expand(),
+                  child: FlatButton(
+
+                      onPressed:  () {
+                        Firestore.instance.collection("books").where("ISBN", isEqualTo: isbn).getDocuments().then((doc){
+                          if (doc.documents.isNotEmpty)
+                            doc.documents.elementAt(0).reference.collection("Resources")
+                                .where("Description", isEqualTo: resources[index].description)
+                                .where("Link", isEqualTo: resources[index].link).getDocuments().then((d){
+                              d.documents.forEach((v){
+                                v.reference.setData({
+                                  "Votes":v.data['Votes'],
+                                  "Description":v.data['Description'],
+                                  "Reports":v.data['Reports']+1,
+                                  "Link":v.data['Link']});
+                              });
+                            });
+                        });
+                      },
+                      padding: EdgeInsets.all(0.0),
+                      child: Text("Report")
+                  ),
+                )
+            ),
+          )
+        ],
+      ),
+    );
   }
 
 
