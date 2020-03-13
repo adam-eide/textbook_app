@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:textbook_app/AddBookLink.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Resource{
@@ -31,7 +32,7 @@ class Resource{
           Text(description,
             textAlign: TextAlign.left,
             style: TextStyle(fontWeight: FontWeight.bold),
-            textScaleFactor: 1.3,),
+            textScaleFactor: 1.1,),
           Container(
             height: 3,
           ),
@@ -73,16 +74,17 @@ class BookInfoWindow extends State {
         appBar: AppBar(
           title: Text(name),
         ),
-        body: buildPage());
+        body: buildPage(context));
   }
 
-  Widget buildPage(){
+  Widget buildPage(BuildContext c){
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         buildInfo(),
+        buildAddButton(c),
         buildLinks()
       ],
     );
@@ -117,25 +119,92 @@ class BookInfoWindow extends State {
     );
   }
 
-  Widget buildLinks(){
-    return ListView.builder(
-      itemCount: resources.length,
-      shrinkWrap: true,
-      itemBuilder: (context, index) {
-        return Container(
-          child: ListTile(
-            title: resources[index]._widget(),
-            onTap: () async {
-              await launch(resources[index].link);
-            },
+  Widget buildAddButton(BuildContext context){
+    return Container(
+      color: Colors.white,
+      width: MediaQuery.of(context).size.width,
+      height: 38,
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            flex: 1,
+            child: IconButton(
+                icon: Icon(Icons.refresh),
+                onPressed: (){
+                  getLinks();
+                  setState(() {
+
+                });}
+            ),
           ),
-        );
-      },
+          Expanded(
+            flex: 6,
+            child: Container(),
+          ),
+          Expanded(
+            flex: 1,
+            child: Container(
+              alignment: Alignment.centerRight,
+              //color: Colors.black,
+              child: Text(
+                "Add Link", textAlign: TextAlign.right,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: IconButton(
+                icon: Icon(Icons.add),
+                onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return AddLink(isbn);
+                }));}
+            ),
+          ),
+        ],
+      )
+    );
+  }
+
+
+  Widget buildLinks(){
+    return Expanded(
+      child: ListView.builder(
+        itemCount: resources.length,
+        shrinkWrap: true,
+
+        itemBuilder: (context, index) {
+          return Container(
+            child: ListTile(
+              title: resources[index]._widget(),
+              trailing: IconButton(
+                icon: Icon(Icons.thumb_up),
+                onPressed: (){
+                  Firestore.instance.collection("books").where("ISBN", isEqualTo: isbn).getDocuments().then((doc){
+                    if (doc.documents.isNotEmpty)
+                      doc.documents.elementAt(0).reference.collection("Resources")
+                          .where("Description", isEqualTo: resources[index].description)
+                          .where("Link", isEqualTo: resources[index].link).getDocuments().then((d){
+                            d.documents.forEach((v){
+                              v.reference.setData({"Votes":v.data['Votes']+1});
+                            });
+                      });
+                  });
+
+                },
+              ),
+              onTap: () async {
+                await launch(resources[index].link);
+              },
+            ),
+          );
+        },
+      ),
     );
   }
   
   void getLinks(){
     print("GET LINKS");
+    resources.clear();
     Firestore.instance.collection("books").where("ISBN", isEqualTo: isbn).getDocuments().then((doc){
       doc.documents.elementAt(0).reference.collection("Resources").getDocuments().then((res){
         print("!!!!!!!!!!!!!!!!!!!!!!!!");
