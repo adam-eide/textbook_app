@@ -185,7 +185,11 @@ class BookInfoWindow extends State {
                           .where("Description", isEqualTo: resources[index].description)
                           .where("Link", isEqualTo: resources[index].link).getDocuments().then((d){
                             d.documents.forEach((v){
-                              v.reference.setData({"Votes":v.data['Votes']+1});
+                              v.reference.setData({
+                                "Votes":v.data['Votes']+1,
+                              "Description":v.data['Description'],
+                                "Reports":v.data['Reports'],
+                                "Link":v.data['Link']});
                             });
                       });
                   });
