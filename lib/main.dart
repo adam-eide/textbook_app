@@ -142,13 +142,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         //color: Colors.white,
                         padding: EdgeInsets.all(6),
                         child: Container(
-                          //color: Colors.black12,
-                          /*decoration: BoxDecoration(
-                            //borderRadius: BorderRadius.circular(15.0),
-                            //color: Colors.white70,
-                            border: Border.all(
-                                color: Colors.black26, style: BorderStyle.solid, width: 1),
-                          ),*/
                           padding: EdgeInsets.only(left: 6),
                           child: DropdownButton<SearchBy>(
 
@@ -291,8 +284,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 }));
               }
               else{
-                print("MAP.isbn");
-                print(books[index].isbn);
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return BookInfo(books[index].isbn, books[index].title);
                 }));
@@ -307,7 +298,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void getBooks(String input){
 
     String title;
-    print("STARTING");
+
 
     print(searchForLabel[searchBy.index]);
     if (searchBy == SearchBy.isbn) input = input.replaceAll('-', '');

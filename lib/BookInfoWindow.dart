@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +12,11 @@ class Resource {
   int reports;
   int votes;
 
-  Resource(this.description, this.link, this.reports, this.votes);
-
+QuerySnapshot q;
+  Resource(this.description, this.link, this.reports, this.votes, this.q);
+  String toString(){
+    return description + "\n" + link + "\n" +reports.toString() + "\n" +votes.toString() + "\n";
+  }
 
 }
 
@@ -21,69 +26,98 @@ class BookInfoWindow extends State {
   String name;
   List<Resource> resources;
   BookInfoWindow(this.isbn, this.name);
+  bool ready;
+
 
   @override
   void initState() {
     super.initState();
+    ready = false;
     resources = new List<Resource>();
-    print("init");
+    print(resources.length.toString() + "           Length");
     print(isbn);
-    getLinks();
+    getLinks().whenComplete(()=>this.setState((){}));
+
+    print("init");
+
   }
 
 
   @override
   Widget build(BuildContext context) {
+    print("BUILDING");
     return Scaffold(
         appBar: AppBar(
           title: Text(name),
         ),
-        body: buildPage(context));
+        body: ((ready!= null && ready)? (_buildPage(context)):(Container(color: Colors.red,))));
   }
 
-  Widget buildPage(BuildContext c){
+  _buildPage(BuildContext c){
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        buildInfo(),
-        buildAddButton(c),
-        buildLinks()
+        _buildInfo(),
+        _buildAddButton(c),
+        _buildLinks()
       ],
     );
   }
 
-  Widget buildInfo(){
+  _buildInfo(){
     print("BUILDINFO");
     return Container(
       color: Color.fromRGBO(180, 180, 180, 1),
       width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.symmetric(vertical: 30, horizontal: 10),
+      height: 120,
+      padding: EdgeInsets.symmetric(vertical: 6, horizontal: 10),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(name,
-            textAlign: TextAlign.left,
-            style: TextStyle(fontWeight: FontWeight.bold),
-            textScaleFactor: 1.5,),
-          Container(
-            height: 18,
+          Expanded(
+            flex: 1,
+            child: Container(
+
+            ),
           ),
-          Text(
-              isbn,
-              textAlign: TextAlign.left
+          Expanded(
+            flex: 12,
+            child: Container(
+
+              child: Text(name,
+                textAlign: TextAlign.left,
+                style: TextStyle(fontWeight: FontWeight.bold),
+                textScaleFactor: 1.5,),
+            ),
           ),
-          Container(
-            height: 4,
+          Expanded(
+            flex: 1,
+            child: Container(
+            ),
+          ),
+          Expanded(
+            flex: 4,
+            child: Text(
+                "ISBN: " + isbn,
+                textAlign: TextAlign.left
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(
+
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget buildAddButton(BuildContext context){
+  _buildAddButton(BuildContext context){
+    print("build add");
     return Container(
       color: Colors.white,
       width: MediaQuery.of(context).size.width,
@@ -130,7 +164,7 @@ class BookInfoWindow extends State {
   }
 
 
-  Widget buildLinks(){
+  _buildLinks(){
     return Expanded(
       child: ListView.builder(
         itemCount: resources.length,
@@ -140,7 +174,7 @@ class BookInfoWindow extends State {
 
           return Container(
             child: ListTile(
-              title: buildWidget(index),
+              title: _buildWidget(index),
 
             ),
           );
@@ -149,25 +183,41 @@ class BookInfoWindow extends State {
     );
   }
   
-  void getLinks(){
+  Future<void> getLinks() async {
     print("GET LINKS");
+
     resources.clear();
-    Firestore.instance.collection("books").where("ISBN", isEqualTo: isbn).getDocuments().then((doc){
-      CollectionReference collectionReference = doc.documents.elementAt(0).reference.collection("Resources");
-      collectionReference.getDocuments().then((res){
-        res.documents.forEach((d){
-          resources.add(new Resource(d.data["Description"], d.data["Link"], d.data["Reports"], d.data["Votes"]));
 
+    print("GET LINKSa");
+    CollectionReference collectionReference =  (await Firestore.instance.collection("books").where("ISBN", isEqualTo: isbn).getDocuments()).documents.elementAt(0).reference.collection("Resources");
+    print("GET LINKSb");
+    List<DocumentSnapshot> docs = (await collectionReference.getDocuments()).documents;
+    print("GETLINKS1");
+    for(int i = 0; i < docs.length; i++) {
+      resources.add(new Resource(
+          docs[i].data["Description"],
+          docs[i].data["Link"],
+          docs[i].data["Reports"],
+          docs[i].data["Votes"],
+          (await  collectionReference
+              .where("Description", isEqualTo: docs[i].data["Description"])
+              .where("Link", isEqualTo: docs[i].data["Link"])
+              .getDocuments()
+          )
+      ));
+      print("GETLINKS2             " + resources.length.toString());
+    }
 
-        }
-        );
-
-      });
+    setState(() {
+      ready = true;
     });
+
+    print("GETLINKS3");
+
   }
 
-  Widget buildWidget(int i){
-    int index = i;
+   _buildWidget(int index){
+    print("BUILDWIDG");
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -209,7 +259,8 @@ class BookInfoWindow extends State {
                     ],
                   ),
                   onPressed: (){
-
+                    print("PRESSED");
+                    launch(resources[index].link);
                   },
                 ),
               ),
@@ -226,33 +277,37 @@ class BookInfoWindow extends State {
                   constraints: BoxConstraints.expand(),
                   child: FlatButton(
 
-                      onPressed:  () {
-                        Firestore.instance.collection("books").where("ISBN", isEqualTo: isbn).getDocuments().then((doc){
-                          if (doc.documents.isNotEmpty)
-                            doc.documents.elementAt(0).reference.collection("Resources")
-                                .where("Description", isEqualTo: resources[index].description)
-                                .where("Link", isEqualTo: resources[index].link).getDocuments().then((d){
-                              d.documents.forEach((v){
-                                v.reference.setData({
-                                  "Votes":v.data['Votes']+1,
-                                  "Description":v.data['Description'],
-                                  "Reports":v.data['Reports'],
-                                  "Link":v.data['Link']});
-                              });
-                            });
-                        }
-                        );
-
+                      onPressed:  ()  {
+                        resources[index].q.documents.first.reference.updateData({'Votes':resources[index].votes+1});
                         setState(() {
                           resources[index].votes++;
+
+
                         });
+
+
                       },
                       padding: EdgeInsets.all(0.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Icon(Icons.thumb_up),
-                          Text(resources[index].votes.toString()),
+                          Expanded(child: Icon(Icons.thumb_up, size: 18,)),
+                          Expanded(
+                            //width: 22,
+                            child: Text(resources[index].votes.toString()),
+                            /*child: TextField(
+
+                              decoration: InputDecoration(
+                                  filled: false,
+                                  contentPadding: EdgeInsets.only(bottom: 6),
+                                  border: InputBorder.none,
+                                  isDense: false
+                              ),
+                              controller: score[index],
+                              readOnly: true,
+                            ),*/
+                          ),
                         ],
                       )
                   ),
@@ -275,19 +330,9 @@ class BookInfoWindow extends State {
                   child: FlatButton(
 
                       onPressed:  () {
-                        Firestore.instance.collection("books").where("ISBN", isEqualTo: isbn).getDocuments().then((doc){
-                          if (doc.documents.isNotEmpty)
-                            doc.documents.elementAt(0).reference.collection("Resources")
-                                .where("Description", isEqualTo: resources[index].description)
-                                .where("Link", isEqualTo: resources[index].link).getDocuments().then((d){
-                              d.documents.forEach((v){
-                                v.reference.setData({
-                                  "Votes":v.data['Votes'],
-                                  "Description":v.data['Description'],
-                                  "Reports":v.data['Reports']+1,
-                                  "Link":v.data['Link']});
-                              });
-                            });
+                        resources[index].q.documents.first.reference.updateData({'Reports':resources[index].reports+1});
+                        setState(() {
+                          resources[index].reports++;
                         });
                       },
                       padding: EdgeInsets.all(0.0),

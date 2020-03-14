@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:textbook_app/BookInfoWindow.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 class AddBookLink extends State {
@@ -80,7 +81,6 @@ class AddBookLink extends State {
                             //  borderRadius: BorderRadius.circular(25.7),
                             //),
                             border: InputBorder.none,
-                            //contentPadding: EdgeInsets.zero
                           ),
                           validator: (value) {
                             if (value.isEmpty) {
@@ -147,7 +147,7 @@ class AddBookLink extends State {
                             isDense: false,
                             filled: true,
                             fillColor: Color.fromRGBO(220, 220, 220, 1),
-                            hintText: "Enter a link (include http)",
+                            hintText: "Enter a link",
                             //contentPadding: const EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                             //focusedBorder: OutlineInputBorder(
                             //  borderSide: BorderSide(color: Colors.white),
@@ -157,9 +157,19 @@ class AddBookLink extends State {
                             //contentPadding: EdgeInsets.zero
                           ),
                           validator: (value) {
+                            print(value + "        value");
                             if (value.isEmpty) {
                               return 'Please enter some text';
                             }
+                            if (value.indexOf('.') == -1)
+                              return 'This is not a valid url';
+                            if (value.lastIndexOf('.') != value.indexOf('.')){
+                              value = value.substring(value.indexOf('.')+1);
+                            }
+                            value = value.substring((value.contains('//') ? value.indexOf('//')+2 : 0));
+
+                            value = ((value.startsWith('http:'))?(""):("http:")) + value;
+                            print(value + "        value");
                             map.putIfAbsent("Link", ()=>value.toString());//SAVE IT
                             return null;
                           },
@@ -188,6 +198,7 @@ class AddBookLink extends State {
                         flex: 3,
                         child: RaisedButton(
                           onPressed: () {
+
                             // Validate returns true if the form is valid, otherwise false.
                             if (_formKey.currentState.validate()) {
                               Firestore.instance.collection("books").where("ISBN", isEqualTo: isbn).getDocuments().then((doc){
@@ -197,12 +208,7 @@ class AddBookLink extends State {
                                         Navigator.pop(context);
                                   });
                               });
-                              Firestore.instance.collection("books")
-                                  .document().setData({'ISBN':map['ISBN'], 'Name': map['Name'].toUpperCase() }).then((v){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                  return BookInfo(map['ISBN'],  map['Name']);
-                                }));
-                              });
+
 
                             }
                           },
