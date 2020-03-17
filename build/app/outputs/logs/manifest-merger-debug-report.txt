@@ -9,10 +9,11 @@ MERGED from [:cloud_firestore] C:\Users\Adam Eide\AndroidStudioProjects\textbook
 MERGED from [:cloud_firestore_web] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\cloud_firestore_web\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:firebase_core] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\firebase_core\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-15:12
 MERGED from [:firebase_core_web] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\firebase_core_web\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
-MERGED from [:barcode_scan] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\barcode_scan\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-17:12
+MERGED from [:device_info] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\device_info\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:url_launcher] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\url_launcher\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-14:12
 MERGED from [:url_launcher_macos] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\url_launcher_macos\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:url_launcher_web] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\url_launcher_web\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
+MERGED from [:barcode_scan] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\barcode_scan\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-17:12
 MERGED from [com.google.firebase:firebase-analytics:17.2.2] C:\Users\Adam Eide\.gradle\caches\transforms-2\files-2.1\69c065b36015ec23fcabde06db01ac31\firebase-analytics-17.2.2\AndroidManifest.xml:2:1-9:12
 MERGED from [com.google.android.material:material:1.0.0] C:\Users\Adam Eide\.gradle\caches\transforms-2\files-2.1\5c57c3258408a767c2ffb89e43d1f67d\material-1.0.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.appcompat:appcompat:1.0.2] C:\Users\Adam Eide\.gradle\caches\transforms-2\files-2.1\2dc8322e139673fcf3048b7bf6e85dd9\appcompat-1.0.2\AndroidManifest.xml:17:1-22:12
@@ -92,10 +93,10 @@ MERGED from [:cloud_firestore] C:\Users\Adam Eide\AndroidStudioProjects\textbook
 MERGED from [:cloud_firestore] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\cloud_firestore\intermediates\library_manifest\debug\AndroidManifest.xml:7:5-13:19
 MERGED from [:firebase_core] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\firebase_core\intermediates\library_manifest\debug\AndroidManifest.xml:7:5-13:19
 MERGED from [:firebase_core] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\firebase_core\intermediates\library_manifest\debug\AndroidManifest.xml:7:5-13:19
-MERGED from [:barcode_scan] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\barcode_scan\intermediates\library_manifest\debug\AndroidManifest.xml:13:5-15:19
-MERGED from [:barcode_scan] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\barcode_scan\intermediates\library_manifest\debug\AndroidManifest.xml:13:5-15:19
 MERGED from [:url_launcher] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\url_launcher\intermediates\library_manifest\debug\AndroidManifest.xml:7:5-12:19
 MERGED from [:url_launcher] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\url_launcher\intermediates\library_manifest\debug\AndroidManifest.xml:7:5-12:19
+MERGED from [:barcode_scan] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\barcode_scan\intermediates\library_manifest\debug\AndroidManifest.xml:13:5-15:19
+MERGED from [:barcode_scan] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\barcode_scan\intermediates\library_manifest\debug\AndroidManifest.xml:13:5-15:19
 MERGED from [com.google.firebase:firebase-analytics:17.2.2] C:\Users\Adam Eide\.gradle\caches\transforms-2\files-2.1\69c065b36015ec23fcabde06db01ac31\firebase-analytics-17.2.2\AndroidManifest.xml:7:5-20
 MERGED from [com.google.firebase:firebase-analytics:17.2.2] C:\Users\Adam Eide\.gradle\caches\transforms-2\files-2.1\69c065b36015ec23fcabde06db01ac31\firebase-analytics-17.2.2\AndroidManifest.xml:7:5-20
 MERGED from [com.google.android.material:material:1.0.0] C:\Users\Adam Eide\.gradle\caches\transforms-2\files-2.1\5c57c3258408a767c2ffb89e43d1f67d\material-1.0.0\AndroidManifest.xml:22:5-20
@@ -190,14 +191,16 @@ MERGED from [:firebase_core] C:\Users\Adam Eide\AndroidStudioProjects\textbook_a
 MERGED from [:firebase_core] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\firebase_core\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:firebase_core_web] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\firebase_core_web\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:firebase_core_web] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\firebase_core_web\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
-MERGED from [:barcode_scan] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\barcode_scan\intermediates\library_manifest\debug\AndroidManifest.xml:7:5-9:41
-MERGED from [:barcode_scan] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\barcode_scan\intermediates\library_manifest\debug\AndroidManifest.xml:7:5-9:41
+MERGED from [:device_info] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\device_info\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:device_info] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\device_info\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:url_launcher] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\url_launcher\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:url_launcher] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\url_launcher\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:url_launcher_macos] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\url_launcher_macos\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:url_launcher_macos] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\url_launcher_macos\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:url_launcher_web] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\url_launcher_web\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:url_launcher_web] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\url_launcher_web\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:barcode_scan] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\barcode_scan\intermediates\library_manifest\debug\AndroidManifest.xml:7:5-9:41
+MERGED from [:barcode_scan] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\barcode_scan\intermediates\library_manifest\debug\AndroidManifest.xml:7:5-9:41
 MERGED from [com.google.firebase:firebase-analytics:17.2.2] C:\Users\Adam Eide\.gradle\caches\transforms-2\files-2.1\69c065b36015ec23fcabde06db01ac31\firebase-analytics-17.2.2\AndroidManifest.xml:5:5-44
 MERGED from [com.google.firebase:firebase-analytics:17.2.2] C:\Users\Adam Eide\.gradle\caches\transforms-2\files-2.1\69c065b36015ec23fcabde06db01ac31\firebase-analytics-17.2.2\AndroidManifest.xml:5:5-44
 MERGED from [com.google.android.material:material:1.0.0] C:\Users\Adam Eide\.gradle\caches\transforms-2\files-2.1\5c57c3258408a767c2ffb89e43d1f67d\material-1.0.0\AndroidManifest.xml:20:5-44
@@ -366,14 +369,6 @@ ADDED from [:firebase_core] C:\Users\Adam Eide\AndroidStudioProjects\textbook_ap
 		ADDED from [:firebase_core] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\firebase_core\intermediates\library_manifest\debug\AndroidManifest.xml:11:17-82
 	android:name
 		ADDED from [:firebase_core] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\firebase_core\intermediates\library_manifest\debug\AndroidManifest.xml:10:17-123
-uses-permission#android.permission.CAMERA
-ADDED from [:barcode_scan] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\barcode_scan\intermediates\library_manifest\debug\AndroidManifest.xml:11:5-65
-	android:name
-		ADDED from [:barcode_scan] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\barcode_scan\intermediates\library_manifest\debug\AndroidManifest.xml:11:22-62
-activity#de.mintware.barcode_scan.BarcodeScannerActivity
-ADDED from [:barcode_scan] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\barcode_scan\intermediates\library_manifest\debug\AndroidManifest.xml:14:9-84
-	android:name
-		ADDED from [:barcode_scan] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\barcode_scan\intermediates\library_manifest\debug\AndroidManifest.xml:14:19-81
 activity#io.flutter.plugins.urllauncher.WebViewActivity
 ADDED from [:url_launcher] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\url_launcher\intermediates\library_manifest\debug\AndroidManifest.xml:8:9-11:74
 	android:exported
@@ -382,6 +377,14 @@ ADDED from [:url_launcher] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app
 		ADDED from [:url_launcher] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\url_launcher\intermediates\library_manifest\debug\AndroidManifest.xml:11:13-71
 	android:name
 		ADDED from [:url_launcher] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\url_launcher\intermediates\library_manifest\debug\AndroidManifest.xml:9:13-74
+uses-permission#android.permission.CAMERA
+ADDED from [:barcode_scan] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\barcode_scan\intermediates\library_manifest\debug\AndroidManifest.xml:11:5-65
+	android:name
+		ADDED from [:barcode_scan] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\barcode_scan\intermediates\library_manifest\debug\AndroidManifest.xml:11:22-62
+activity#de.mintware.barcode_scan.BarcodeScannerActivity
+ADDED from [:barcode_scan] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\barcode_scan\intermediates\library_manifest\debug\AndroidManifest.xml:14:9-84
+	android:name
+		ADDED from [:barcode_scan] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\barcode_scan\intermediates\library_manifest\debug\AndroidManifest.xml:14:19-81
 uses-permission#android.permission.ACCESS_NETWORK_STATE
 ADDED from [com.google.android.gms:play-services-measurement:17.2.2] C:\Users\Adam Eide\.gradle\caches\transforms-2\files-2.1\f62d67bb54ebc8ba4971713b274e5a92\play-services-measurement-17.2.2\AndroidManifest.xml:24:5-79
 MERGED from [com.google.android.gms:play-services-measurement-api:17.2.2] C:\Users\Adam Eide\.gradle\caches\transforms-2\files-2.1\6d43529b1d7c097e0f993b5d8473bf66\play-services-measurement-api-17.2.2\AndroidManifest.xml:23:5-79

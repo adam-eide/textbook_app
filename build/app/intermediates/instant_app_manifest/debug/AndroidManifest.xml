@@ -73,11 +73,11 @@
                 android:value="com.google.firebase.components.ComponentRegistrar" />
         </service>
 
-        <activity android:name="de.mintware.barcode_scan.BarcodeScannerActivity" />
         <activity
             android:name="io.flutter.plugins.urllauncher.WebViewActivity"
             android:exported="false"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+        <activity android:name="de.mintware.barcode_scan.BarcodeScannerActivity" />
 
         <receiver
             android:name="com.google.android.gms.measurement.AppMeasurementReceiver"

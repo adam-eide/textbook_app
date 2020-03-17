@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:textbook_app/BookInfoWindow.dart';
+import 'package:textbook_app/UserDocument.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
@@ -215,6 +216,7 @@ class AddBookLink extends State {
                           child: Text('Submit'),
                         ),
                       ),
+
                       Expanded(
                         flex: 2,
                         child: Container(
@@ -223,6 +225,7 @@ class AddBookLink extends State {
                       ),
                     ],
                   ),
+
                   Container(
                     padding: EdgeInsets.only(left: 50, right: 50, top: 10),
                     child: Text(

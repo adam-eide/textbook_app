@@ -23,6 +23,7 @@ dependencies:
   url_launcher: ^5.4.1
   cloud_firestore: ^0.13.2+1
   cupertino_icons: ^0.1.2
+  device_info: ^0.4.2+1
 
 
 dev_dependencies:

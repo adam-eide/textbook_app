@@ -5,40 +5,25 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:textbook_app/AddBookLink.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:device_info/device_info.dart';
 
-class Resource {
-  String description;
-  String link;
-  int reports;
-  int votes;
-
-QuerySnapshot q;
-  Resource(this.description, this.link, this.reports, this.votes, this.q);
-  String toString(){
-    return description + "\n" + link + "\n" +reports.toString() + "\n" +votes.toString() + "\n";
-  }
-
-}
+import 'package:textbook_app/UserDocument.dart';
 
 class BookInfoWindow extends State {
 
   String isbn;
   String name;
-  List<Resource> resources;
   BookInfoWindow(this.isbn, this.name);
   bool ready;
-
+  CollectionReference resourceCollection;
+  List<String> votedIDs;
 
   @override
   void initState() {
     super.initState();
     ready = false;
-    resources = new List<Resource>();
-    print(resources.length.toString() + "           Length");
-    print(isbn);
+    votedIDs = List();
     getLinks().whenComplete(()=>this.setState((){}));
-
-    print("init");
 
   }
 
@@ -124,17 +109,7 @@ class BookInfoWindow extends State {
       height: 38,
       child: Row(
         children: <Widget>[
-          Expanded(
-            flex: 1,
-            child: IconButton(
-                icon: Icon(Icons.refresh),
-                onPressed: (){
-                  getLinks();
-                  setState(() {
 
-                });}
-            ),
-          ),
           Expanded(
             flex: 6,
             child: Container(),
@@ -166,82 +141,62 @@ class BookInfoWindow extends State {
 
   _buildLinks(){
     return Expanded(
-      child: ListView.builder(
-        itemCount: resources.length,
-        shrinkWrap: true,
+      child: StreamBuilder<QuerySnapshot>(
+        stream: resourceCollection.snapshots(),
+          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (!snapshot.hasData) return new Text('Loading...');
+            return new ListView(
+              children: snapshot.data.documents.map((DocumentSnapshot document) {
+                return new Card(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      ListTile(
+                          title: _buildWidget(document),
+                      ),
 
-        itemBuilder: (context, index) {
-
-          return Container(
-            child: ListTile(
-              title: _buildWidget(index),
-
-            ),
-          );
-        },
-      ),
+                    ],
+                  )
+                );
+              }).toList(),
+            );
+          },
+      )
     );
+
   }
   
   Future<void> getLinks() async {
     print("GET LINKS");
-
-    resources.clear();
-
-    print("GET LINKSa");
-    CollectionReference collectionReference =  (await Firestore.instance.collection("books").where("ISBN", isEqualTo: isbn).getDocuments()).documents.elementAt(0).reference.collection("Resources");
-    print("GET LINKSb");
-    List<DocumentSnapshot> docs = (await collectionReference.getDocuments()).documents;
-    print("GETLINKS1");
-    for(int i = 0; i < docs.length; i++) {
-      resources.add(new Resource(
-          docs[i].data["Description"],
-          docs[i].data["Link"],
-          docs[i].data["Reports"],
-          docs[i].data["Votes"],
-          (await  collectionReference
-              .where("Description", isEqualTo: docs[i].data["Description"])
-              .where("Link", isEqualTo: docs[i].data["Link"])
-              .getDocuments()
-          )
-      ));
-      print("GETLINKS2             " + resources.length.toString());
-    }
-
+    resourceCollection = (await Firestore.instance.collection('books').where("ISBN", isEqualTo: isbn).getDocuments()).documents.elementAt(0).reference.collection('Resources');
+    votedIDs = await UserDocument.instance.getVotes();
     setState(() {
       ready = true;
     });
 
-    print("GETLINKS3");
 
   }
 
-   _buildWidget(int index){
+   _buildWidget(DocumentSnapshot document) {
     print("BUILDWIDG");
     return Container(
       width: double.infinity,
-      decoration: BoxDecoration(
-        //color: Colors.grey,
-          border: Border(
-              bottom: BorderSide(
-                  color: Colors.black,
-                  width: 1)
-          )
-      ),
+      height: MediaQuery.of(context).size.height/12,
       child: Row(
         children: <Widget>[
           Expanded(
             flex: 26,
             child: Container(
-              height: 60,
+
               child: ConstrainedBox(
                 constraints: BoxConstraints.expand(),
                 child: FlatButton(
+                  highlightColor: Colors.blueAccent,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(resources[index].description,
+                      Text(document['Description'].toString(),
                         textAlign: TextAlign.left,
                         style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
                         textScaleFactor: 1.3,),
@@ -249,7 +204,7 @@ class BookInfoWindow extends State {
                         height: 3,
                       ),
                       Text(
-                        ((resources[index].link.length > 45)?(resources[index].link.substring(0, 40)+"..."):(resources[index].link)),
+                        document['Link'],
                         textAlign: TextAlign.left,
                         textScaleFactor: 0.9,
                       ),
@@ -260,87 +215,85 @@ class BookInfoWindow extends State {
                   ),
                   onPressed: (){
                     print("PRESSED");
-                    launch(resources[index].link);
+                    launch(document['Link']);
                   },
                 ),
               ),
             ),
           ),
           Expanded(
-            flex: 5,
-            child: Container(
-              //color: Colors.black12,
-                decoration: BoxDecoration(border: Border.all(width: 1, color: Colors.black26)),
-                //padding: EdgeInsets.all(4),
-                height: 40,
-                child: ConstrainedBox(
-                  constraints: BoxConstraints.expand(),
-                  child: FlatButton(
+            flex: 10,
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  flex: 4,
+                  child: Container(
+                    color: Color.fromRGBO(0, 0, 0, .04),
+                      //decoration: BoxDecoration(border: Border.all(width: 1, color: Colors.black26)),
+                      //padding: EdgeInsets.all(4),
+                      margin: EdgeInsets.only(bottom: 4),
+                      //height: 40,
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints.expand(),
+                        child: FlatButton(
 
-                      onPressed:  ()  {
-                        resources[index].q.documents.first.reference.updateData({'Votes':resources[index].votes+1});
-                        setState(() {
-                          resources[index].votes++;
+                            onPressed:  ()  async{
+                              bool disable = await UserDocument.instance.hasVoted(document.documentID);
+                              if (!disable) {
+                                document.reference.updateData({'Votes': document['Votes'] + 1});
+                                votedIDs.add(document.documentID);
+                              }
+                              else{
+                                document.reference.updateData({'Votes': document['Votes'] - 1});
+                                votedIDs.remove(document.documentID);
+                              }
+                              UserDocument.instance.addVote(document.documentID);
 
 
-                        });
+                            },
+                            padding: EdgeInsets.all(0.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Expanded(child: Icon(Icons.thumb_up, size: 18,color: votedIDs.indexOf(document.documentID)==-1?Colors.black12:Colors.black,)),
+                                Expanded(
+                                  //width: 22,
+                                  child: Text(document['Votes'].toString()),
 
-
-                      },
-                      padding: EdgeInsets.all(0.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Expanded(child: Icon(Icons.thumb_up, size: 18,)),
-                          Expanded(
-                            //width: 22,
-                            child: Text(resources[index].votes.toString()),
-                            /*child: TextField(
-
-                              decoration: InputDecoration(
-                                  filled: false,
-                                  contentPadding: EdgeInsets.only(bottom: 6),
-                                  border: InputBorder.none,
-                                  isDense: false
-                              ),
-                              controller: score[index],
-                              readOnly: true,
-                            ),*/
-                          ),
-                        ],
+                                ),
+                              ],
+                            )
+                        ),
                       )
                   ),
-                )
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Container(),
-          ),
-          Expanded(
-            flex: 5,
-            child: Container(
-              //color: Colors.black12,
-                decoration: BoxDecoration(border: Border.all(width: 1, color: Colors.black26)),
-                //padding: EdgeInsets.all(4),
-                height: 40,
-                child: ConstrainedBox(
-                  constraints: BoxConstraints.expand(),
-                  child: FlatButton(
+                ),
+                Expanded(
+                  flex: 3,
+                  child: Container(
+                      color: Color.fromRGBO(0, 0, 0, .04),
+                      //decoration: BoxDecoration(border: Border.all(width: 1, color: Colors.black26)),
 
-                      onPressed:  () {
-                        resources[index].q.documents.first.reference.updateData({'Reports':resources[index].reports+1});
-                        setState(() {
-                          resources[index].reports++;
-                        });
-                      },
-                      padding: EdgeInsets.all(0.0),
-                      child: Text("Report")
+
+                      //height: 40,
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints.expand(),
+                        child: FlatButton(
+
+                            onPressed:  () {
+                              document.reference.updateData({'Reports': document['Reports']+1});
+                              //setState(() {resources[index].reports++;});
+                            },
+                            padding: EdgeInsets.all(0.0),
+                            child: Text("Report")
+                        ),
+                      )
                   ),
-                )
+                ),
+              ],
             ),
-          )
+          ),
+
         ],
       ),
     );

@@ -123,17 +123,17 @@
 72-->[com.google.firebase:firebase-iid:20.0.2] C:\Users\Adam Eide\.gradle\caches\transforms-2\files-2.1\d1a45cce5ba9df72f5e73060072af6c0\firebase-iid-20.0.2\AndroidManifest.xml:34:17-82
 73        </service>
 74
-75        <activity android:name="de.mintware.barcode_scan.BarcodeScannerActivity" />
-75-->[:barcode_scan] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\barcode_scan\intermediates\library_manifest\debug\AndroidManifest.xml:14:9-84
-75-->[:barcode_scan] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\barcode_scan\intermediates\library_manifest\debug\AndroidManifest.xml:14:19-81
-76        <activity
-76-->[:url_launcher] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\url_launcher\intermediates\library_manifest\debug\AndroidManifest.xml:8:9-11:74
-77            android:name="io.flutter.plugins.urllauncher.WebViewActivity"
-77-->[:url_launcher] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\url_launcher\intermediates\library_manifest\debug\AndroidManifest.xml:9:13-74
-78            android:exported="false"
-78-->[:url_launcher] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\url_launcher\intermediates\library_manifest\debug\AndroidManifest.xml:10:13-37
-79            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
-79-->[:url_launcher] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\url_launcher\intermediates\library_manifest\debug\AndroidManifest.xml:11:13-71
+75        <activity
+75-->[:url_launcher] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\url_launcher\intermediates\library_manifest\debug\AndroidManifest.xml:8:9-11:74
+76            android:name="io.flutter.plugins.urllauncher.WebViewActivity"
+76-->[:url_launcher] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\url_launcher\intermediates\library_manifest\debug\AndroidManifest.xml:9:13-74
+77            android:exported="false"
+77-->[:url_launcher] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\url_launcher\intermediates\library_manifest\debug\AndroidManifest.xml:10:13-37
+78            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+78-->[:url_launcher] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\url_launcher\intermediates\library_manifest\debug\AndroidManifest.xml:11:13-71
+79        <activity android:name="de.mintware.barcode_scan.BarcodeScannerActivity" />
+79-->[:barcode_scan] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\barcode_scan\intermediates\library_manifest\debug\AndroidManifest.xml:14:9-84
+79-->[:barcode_scan] C:\Users\Adam Eide\AndroidStudioProjects\textbook_app\build\barcode_scan\intermediates\library_manifest\debug\AndroidManifest.xml:14:19-81
 80
 81        <receiver
 81-->[com.google.android.gms:play-services-measurement:17.2.2] C:\Users\Adam Eide\.gradle\caches\transforms-2\files-2.1\f62d67bb54ebc8ba4971713b274e5a92\play-services-measurement-17.2.2\AndroidManifest.xml:29:9-33:20

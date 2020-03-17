@@ -1,8 +1,10 @@
+import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:textbook_app/AddBookForm.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:textbook_app/BookInfoWindow.dart';
+import 'package:textbook_app/UserDocument.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 void main() => runApp(MyApp());
@@ -11,11 +13,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Firestore Test',
+      title: 'Textbook DB',
       theme: ThemeData(
         primaryColor: Colors.blueAccent,
       ),
-      home: MyHomePage(title: 'Flutter Firestore Test'),
+      home: MyHomePage(title: 'Textbook DB'),
+
     );
   }
 }
@@ -30,8 +33,12 @@ class MyHomePage extends StatefulWidget {
 class BookCover{
   String title;
   String isbn;
+  bool isFavorite;
   BookCover(String title, String isbn, String info){
-
+    if (info == 'f')
+      isFavorite = true;
+    else
+      isFavorite = false;
     this.title = (((title == null) ? ("") : (title)));
     this.isbn = (((isbn == null) ? ("") : (isbn)));
     // INFO is there in case we need it later for image or edition or class
@@ -54,14 +61,7 @@ class BookCover{
     return Container(
       width: double.infinity,
 
-      decoration: BoxDecoration(
-        //color: Colors.grey,
-          border: Border(
-              bottom: BorderSide(
-                  color: Colors.black,
-                  width: 1)
-          )
-      ),
+
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,6 +105,8 @@ class _MyHomePageState extends State<MyHomePage> {
     searchBy = SearchBy.isbn;
     books = new List<BookCover>();
     _controller = TextEditingController();
+    UserDocument();
+
   }
 
   @override
@@ -112,6 +114,15 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.star),
+            onPressed: () async {
+              books = new List<BookCover>();
+              List<String> favList = await UserDocument.instance.getFavorites();
+              favList.forEach((element) { getBooks(element);});
+            },)
+          ],
         ),
         body: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -269,13 +280,53 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget bookList(){
+
     return ListView.builder(
       itemCount: books.length,
       shrinkWrap: true,
       itemBuilder: (context, index) {
         return Container(
+          width: MediaQuery.of(context).size.width,
+          child: Card(
 
-          child: ListTile(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
+                    child: IconButton(
+                      icon: Icon(books[index].isFavorite ? Icons.star : Icons.star_border),
+                      onPressed: (){
+                        UserDocument.instance.setFavorite(books[index].isbn);
+                        setState(() {
+                          books[index].isFavorite = !books[index].isFavorite;
+                        });
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    flex: 12,
+                    child: ListTile(
+                      title: books[index]._widget(),
+                      onTap: () async{
+                        if (books[index].isbn.length == 0){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) {
+                            return AddBook("", books[index].title);
+                          }));
+                        }
+                        else{
+                          Navigator.push(context, MaterialPageRoute(builder: (context) {
+                            return BookInfo(books[index].isbn, books[index].title);
+                          }));
+                        }
+                      },
+                    ),
+                  ),
+
+                ],
+              )
+          ),
+          /*ListTile(
             title: books[index]._widget(),
             onTap: () async{
               if (books[index].isbn.length == 0){
@@ -288,27 +339,30 @@ class _MyHomePageState extends State<MyHomePage> {
                   return BookInfo(books[index].isbn, books[index].title);
                 }));
               }
-          },
-          ),
-        );
-      },
-    );
+            },*/
+          );
+      }
+      );
   }
 
-  void getBooks(String input){
+
+  void getBooks(String input) async{
 
     String title;
+    List<String> favs = await UserDocument.instance.getFavorites();
+    String f = "";
 
 
     print(searchForLabel[searchBy.index]);
     if (searchBy == SearchBy.isbn) input = input.replaceAll('-', '');
+    if (favs.indexOf(input) != -1)
+      f = "f";
     Firestore.instance.collection('books')
     // this searches for name if searchBy=name and isbn if it = isbn
         .where(searchForLabel[searchBy.index], isEqualTo: input.toUpperCase()).getDocuments().then(
             (snap){
               Map<String, dynamic> map;
               if (snap.documents.isEmpty ){
-                print("documents = empty");
                 if (searchBy == SearchBy.isbn) {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return AddBook(input, "");
@@ -319,10 +373,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 }
               }
               else {
-                print("documents != empty");
                 snap.documents.forEach((d){
                   map = d.data;
-                  books.add(new BookCover(map['Name'], map['ISBN'], ""));
+                  books.add(new BookCover(map['Name'], map['ISBN'], f));
                 });
               }
 
