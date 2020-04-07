@@ -32,7 +32,8 @@ class UserDocument {
     //.then((value) {
       String id = info.androidId;
       print("ID  " + id);
-      var v = await Firestore.instance.collection('users').document(id).updateData({'works':true});
+      var v = await Firestore.instance.collection('users').document(id).setData({'works':true});
+
           //.whenComplete(() => _userDocument = Firestore.instance.collection('users').document(id));
     count = ((await Firestore.instance.collection('users').document(id).get())).data['c'];
     DocumentReference dr = await Firestore.instance.collection('users').document(id);
